@@ -41,7 +41,7 @@ ARG GO_PROXY_BUILD_FROM=release
 COPY --from=builder_source /bin/proxy /bin/proxy_source
 COPY --from=builder_release /bin/proxy /bin/proxy_release
 RUN mv /bin/proxy_${GO_PROXY_BUILD_FROM} /bin/proxy
-
+RUN apt install -f libssl-dev pkg-config
 RUN mkdir -p /action
 ADD compile.py /bin/compile.py
 ADD src /usr/src

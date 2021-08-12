@@ -23,6 +23,7 @@ import os, sys, codecs, subprocess
 from os.path import abspath, exists, dirname
 import time
 import shutil
+import fileinput
 
 ## utils
 # write a file creating intermediate directories
@@ -102,6 +103,11 @@ def sources(main, src_dir):
     copy_replace(launcher, "/usr/src/action_loop/src/main.rs",
           "use actions::main as actionMain;",
           "use actions::%s as actionMain;" % main )
+
+    for line in fileinput.input(cargo_action_file, inplace=True):
+        if line.strip().startswith('name = "action-') > 0:
+            line = 'name = "actions"\n'
+        sys.stdout.write(line)     
 
 if __name__ == '__main__':
     if len(sys.argv) < 4:
