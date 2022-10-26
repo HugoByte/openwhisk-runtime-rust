@@ -15,26 +15,30 @@
  * limitations under the License.
  */
 
-include 'tests'
-include 'core:rust1.54'
-include 'core:rust1.64'
+extern crate serde_json;
 
-rootProject.name = 'runtime-rust'
+use serde_derive::{Deserialize, Serialize};
+use serde_json::{Error, Value};
 
-gradle.ext.openwhisk = [
-        version: '1.0.0-SNAPSHOT'
-]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+struct Input {
+    #[serde(default = "stranger")]
+    name: String,
+}
 
-gradle.ext.scala = [
-    version: '2.12.7',
-    depVersion  : '2.12',
-    compileFlags: ['-feature', '-unchecked', '-deprecation', '-Xfatal-warnings', '-Ywarn-unused-import']
-]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+struct Output {
+    greeting: String,
+}
 
-gradle.ext.scalafmt = [
-    version: '1.5.0',
-    config: new File(rootProject.projectDir, '.scalafmt.conf')
-]
+fn stranger() -> String {
+    "stranger".to_string()
+}
 
-gradle.ext.akka = [version : '2.6.12']
-gradle.ext.akka_http = [version : '10.2.4']
+pub fn main(args: Value) -> Result<Value, Error> {
+    let input: Input = serde_json::from_value(args)?;
+    let output = Output {
+        greeting: format!("Hello, {}", input.name),
+    };
+    serde_json::to_value(output)
+}
