@@ -29,7 +29,7 @@ import fileinput
 # write a file creating intermediate directories
 def write_file(file, body):
     os.makedirs(dirname(file), mode=0o755, exist_ok=True)
-    with open(file, mode="w", encoding="utf-8") as f:
+    with open(file, mode="w") as f:
         f.write(body)
 
 # copy a file eventually replacing a substring
@@ -55,8 +55,8 @@ serde_derive = "1.0"
 
 def build(tgt_dir):
      # support RELEASE
-     cmd = ["cargo", "build"]
-     bin_dir = "debug"
+     cmd = ["cargo", "build", "--release"]
+     bin_dir = "release"
      if "RELEASE" in os.environ:
          cmd += "--release"
          bin_dir = "release"

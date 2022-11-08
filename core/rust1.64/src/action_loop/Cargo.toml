@@ -26,3 +26,29 @@ serde_derive = "1.0"
 serde_json = "1.0"
 libc = "0.2.49"
 actions = { path = "../actions" }
+serde = { version = "1.0.81", features = ["derive"]}
+serde_json = "1.0"
+serde_derive = "1.0"
+anyhow = "1.0.56"
+wasmtime = "0.34"
+wasmtime-wasi = "0.34"
+wasi-common = "0.34"
+bytes = "1"
+futures = "0.3"
+http = "0.2"
+reqwest = { version = "0.11", default-features = true, features = [
+        "json",
+        "blocking",
+    ] }
+thiserror = "1.0"
+tokio = { version = "1.4.0", features = [ "full" ] }
+tracing = { version = "0.1", features = [ "log" ] }
+url = "2.2.1"
+
+[profile.release]
+lto = true
+codegen-units = 1
+overflow-checks = true
+# Tell `rustc` to optimize for small code size.
+opt-level = "z"
+debug = false
