@@ -45,11 +45,13 @@ RUN mv /bin/proxy_${GO_PROXY_BUILD_FROM} /bin/proxy
 RUN apt install -f libssl-dev pkg-config
 RUN rustup toolchain install nightly
 RUN rustup default nightly
+RUN rustup target add wasm32-unknown-unknown
+RUN rustup target add wasm32-wasi
 
 RUN mkdir -p /action
 ADD compile.py /bin/compile.py
 ADD src /usr/src
-RUN cd /usr/src ; cargo build
+RUN cd /usr/src ; cargo build --release
 ENV PYTHONIOENCODING=utf8
 ENV OW_COMPILER=/bin/compile.py
 WORKDIR /action
